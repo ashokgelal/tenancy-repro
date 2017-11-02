@@ -38,7 +38,7 @@ class CreateTenant extends Command
         $hostname->customer()->associate($customer);
         app(HostnameRepository::class)->attach($hostname, $website);
 
-        // create a dummy user
+        // create a dummy user; this is where the error occurrs👇
         User::create(['name' => $name, 'email' => $email, 'password' => bcrypt('secret')]);
     }
 }
