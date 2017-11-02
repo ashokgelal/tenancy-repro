@@ -9,6 +9,7 @@ use Hyn\Tenancy\Models\Customer;
 use Hyn\Tenancy\Models\Hostname;
 use Hyn\Tenancy\Models\Website;
 use Illuminate\Console\Command;
+use Tenancy; // facade, or resolve via ioc: Hyn\Tenancy\Environment
 
 class CreateTenant extends Command
 {
@@ -37,6 +38,9 @@ class CreateTenant extends Command
         $hostname->fqdn = "{$name}.example.com";
         $hostname->customer()->associate($customer);
         app(HostnameRepository::class)->attach($hostname, $website);
+        
+        // switch active tenant, setting the tenant connection;
+        Tenancy::hostname($hostname);
 
         // create a dummy user; this is where the error occurrs👇
         User::create(['name' => $name, 'email' => $email, 'password' => bcrypt('secret')]);
